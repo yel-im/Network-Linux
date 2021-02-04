@@ -116,3 +116,80 @@ routing protocol에 따라 Routing table을 작성한다.
 단점 : 라우터를 처음 구성 할 때에는 IP 주소 설정이 안 되어있어서 Talnet 사용이 불가하고 네트워크 연결이 끊어질 경우 접속이 불가하다
 
 Talnet을 **Virtual Terminal** (가상터미널)이라고 한다.
+
+**3) 기타 접속 방식**
+	AUX포트, NMS(네트워크 관리 시스템) Router에 접속해서 설정할 수도 있다
+	TDTP서버를 통해 다른 Router에서 만들어놓은 라우터 설정 파일을 라우터로 다운로드 하는 방식이있다.
+
+
+
+##### 라우터의 내부 구성
+
+![image-20210204142252016](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20210204142252016.png)
+
+​	**1) RAM**
+​		휘발성 메모리
+​		IOS가 올라와서 실행되고, 라우팅 테이블과 구성파일(설정 내용)이 올라와서 동작하는 장소
+​		그 외에도 ARP cache나 fast switching에 대한 cache 등을 가지고 있다.
+
+​	**2) NVRAM (Non Volatile RAM)**
+​			비휘발성 메모리
+​			설정파일(설정내용)을 저장한다 (라우팅 테이블은 저장하지 않음)
+
+​	**3) Flash 메모리**
+​			비휘발성 메모리
+​			주로 ISO 이미지 파일 저장용으로 사용되고 NVRAM보다 메모리용량이 크다(NVRAM은 설정파일만 저장)
+​			Router에 새로운 기능이 추가되면 Router 자체를 교환하는 것이 아닌 IOS를 업그레이드를 하면 된다
+
+​	**4) ROM**
+​		Router의 가장 기본적인 내용이 저장
+​		전원이 들어올 경우 어떤 순서로 Router 자신의 상태를 점검하고 IOS를 어디서 RAM으로 올리는지 등의 내용이 저장 됨 (Bootstrap)
+​		복구용 Mini IOS가 저장 되어 있다.
+
+​	**5) 부가 설명**
+​		전체적으로 PC와 비슷한 구성을 가진다
+​		Router에서 작업은 모두 RAM위에서 동작
+​		ROM에는 Router의 기본정보와 mini IOS, NVRAM에는 설정파일, Flash에는 IOS이미지가 저장 된다
+​		RAM 과 Flash는 필요에 따라 업그레이드를 할 수 있지만 적정한 메모리를 유지하는 것이 좋다
+​		ROM은 특별한 경우가 아닌 이상 교체하는 상황이 거의 없다
+
+##### 라우터의 부팅 과정
+
+1) Power On self test (POST)
+	자신이 물리적으로 이상이 있는지 없는지 체크를 하는 과정
+
+2) Load and run bootstrap code
+	bootstrap code를 불러오는 과정
+
+3)Find the IOS software
+	어디서 IOS 이미지를 가져올건지 정하는 과정
+
+4)Load the IOS software
+	찾은 IOS를 불러오는 과정(RAM위에 올려서 동작을 시킨다)
+
+5)Find the configuration
+	NVRAM에 있던 설정파일들을 찾는다
+
+6)Load the configuration
+	NVRAM에 있던 설정파일을 RAM으로 불러온다
+
+7) RUN
+	Router가 작동
+
+##### Router의 Mode
+
+1.ROMMON Mode
+	평소에는 사용하지 않음
+	라우터 패스워드를 모를 경우와 IOS 이미지 파일에 이상이 생긴 경우 복구를 하기 위한 모드
+
+2.Setup Mode
+	NVRAM에 저장된 Router 설정 파일이 없는 경우 자동으로 실행되는 모드
+
+3.User Mode
+	사용중인 라우터에 콘솔 혹은 talnet으로 접속하면 처음 보이는 화면
+
+4.Privileged Mode
+	라우터의 운영자 모드
+
+5.Global Configuration Mode
+	라우터의 설정을 변경하거나 새로 설정할 경우 사용하는 모드
