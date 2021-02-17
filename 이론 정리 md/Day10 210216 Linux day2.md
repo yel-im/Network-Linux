@@ -17,7 +17,9 @@ history = 사용한 명령어 목록이 나옴
 
 mv 원본대상 바뀔이름 (mv test.txt number.txt)
 
-종료명령어 = halt -p 또는 shutdown
+종료명령어 = halt -p 또는 shutdown now
+
+재시작 = reboot
 
 / = 경로 구분자
 
